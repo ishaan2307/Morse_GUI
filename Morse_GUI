@@ -1,0 +1,107 @@
+from tkinter import*
+import tkinter.font
+import RPi.GPIO as GPIO
+import time
+from gpiozero import LED
+
+win = Tk()
+win.title("MORSE TRANSLATER")
+myFont = tkinter.font.Font(family = 'Helvetica', size = 18, weight = 'bold')
+
+ledPin=14
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(ledPin,GPIO.OUT)
+
+CODE = {' ': ' ',
+        "'": '.----.',
+        '(': '-.--.-',
+        ')': '-.--.-',
+        ',': '--..--',
+        '-': '-....-',
+        '.': '.-.-.-',
+        '/': '-..-.',
+        '0': '-----',
+        '1': '.----',
+        '2': '..---',
+        '3': '...--',
+        '4': '....-',
+        '5': '.....',
+        '6': '-....',
+        '7': '--...',
+        '8': '---..',
+        '9': '----.',
+        ':': '---...',
+        ';': '-.-.-.',
+        '?': '..--..',
+        'A': '.-',
+        'B': '-...',
+        'C': '-.-.',
+        'D': '-..',
+        'E': '.',
+        'F': '..-.',
+        'G': '--.',
+        'H': '....',
+        'I': '..',
+        'I': '..',
+        'J': '.---',
+        'K': '-.-',
+        'L': '.-..',
+        'M': '--',
+        'N': '-.',
+        'O': '---',
+        'P': '.--.',
+        'Q': '--.-',
+        'S': '...',
+        'R': '.-.',
+        'T': '-',
+        'U': '..-',
+        'V': '...-',
+        'W': '.--',
+        'X': '-..-',
+        'Y': '-.--',
+        'Z': '--..',
+        '_': '..--.-'}
+        
+
+def dot():
+        GPIO.output(ledPin,True)
+        time.sleep(1)
+        GPIO.output(ledPin,False)
+        time.sleep(0.5)
+
+def dash():
+        GPIO.output(ledPin,True)
+        time.sleep(3)
+        GPIO.output(ledPin,False)
+        time.sleep(0.5)
+
+def exitProgram():
+        print("Exit Button pressed")
+        GPIO.cleanup()
+        win.destroy()
+
+def BlinkMorse():
+    inputvalue =inputword.get()
+    for letter in inputvalue: 
+       for symbol in CODE[letter.upper()]:
+            if symbol == '-':
+                    dash()
+            elif symbol == '.':
+                        dot()
+            else:
+                    time.sleep(0.5)
+    time.sleep(0.5)
+    
+
+inputword = Entry(win, text="Enter a word (maximum 12 characters)", width=30)
+inputword.grid(row =0, column =0)
+
+
+blinktheLED = Button(win, command=BlinkMorse, text="Send")
+blinktheLED.grid(row =1, column =0)
+
+exitbutton = Button(win, command = exitProgram, text ="Exit")
+exitbutton.grid(row=3, column = 0)
+
+win.mainloop()
